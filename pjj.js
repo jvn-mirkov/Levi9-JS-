@@ -2,72 +2,59 @@
 Neka resenja prezeta sa:
 https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
 ***************************************/
-//canvas 
-//background layer
+
+class Ball {
+    constructor(x, y, dx, dy, radius){
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
+        this.radius = radius;
+    }
+}
+
+class Game {
+    constructor(lineHeight, lineWidth, move, ball2StartTime, ball3StartTime){
+        this.lineHeight = lineHeight;
+        this.lineWidth = lineWidth;
+        this.move = move;
+        this.ball2StartTime = ball2StartTime;
+        this.ball3StartTime = ball3StartTime;
+    }
+}
+
+//
+var name;
+var score;
+
+//canvas setup
 var canvas = document.getElementById("mainCanvas");
 var ctx = canvas.getContext("2d");
 
-//vertical and horizontal path layer
-//var canvas2 = document.getElementById("crossCanvas");
-//var ctx2 = canvas.getContext("2d");
+//init objekata
+ball1 = new Ball(canvas.width/2, canvas.height-30, 2, -2, 10);
+ball2 = new Ball(canvas.width/2, canvas.height/2, 2, 2, 10);
+ball3 = new Ball(canvas.width/2, canvas.height/2, 2, -2, 10);
+game  = new Game(10, 75, 4, 7000, 140000);
 
-//ball and lines layer
-//var canvas3 = document.getElementById("myCanvas3");
-//var ctx3 = canvas.getContext("2d");
-
-//ball1
-var x = canvas.width/2;
-var y = canvas.height-30;
-var ballRadius = 10;
-var dx = 2;
-var dy = -2;
-
-//ball2
-var ball2StartTime = 7000; 
-var x2 = canvas.width/2;
-var y2 = canvas.height/2;
-var dx2 = 2;
-var dy2 = 2;
-
-//ball3
-var ball3StartTime = 14000; 
-var x3 = canvas.width/2;
-var y3 = canvas.height/2;
-var dx3 = 2;
-var dy3 = -2;
-
-
-
-
-//line properites
-var lineHeight = 10;
-var lineWidth = 75;
-var move = 4;
-
-//flags
+//init flags
 var downPressed = false;
 var upPressed = false;
 var leftPressed = false;
 var rightPressed = false;
 
 //init positions
-var xB = (canvas.width-lineWidth)/2;
-var yB = canvas.height-lineHeight
-var xT = (canvas.width-lineWidth)/2;
-var yT = 0 
-var xL = 0
-var yL = (canvas.width-lineWidth)/2;
-var xR = canvas.width-lineHeight
-var yR = (canvas.width-lineWidth)/2;
-
-
+var xB = (canvas.width-game.lineWidth)/2;
+var yB = canvas.height-game.lineHeight;
+var xT = (canvas.width-game.lineWidth)/2;
+var yT = 0;
+var xL = 0;
+var yL = (canvas.width-game.lineWidth)/2;
+var xR = canvas.width-game.lineHeight;
+var yR = (canvas.width-game.lineWidth)/2;
 
 //listener functions
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
 document.addEventListener('mousemove', mouseMoveHandler, false);
-
-
 
 
 function mouseMoveHandler(e) {
@@ -76,11 +63,11 @@ function mouseMoveHandler(e) {
     var relativeY = e.clientY - canvas.offsetTop;   
 
     if(relativeX > 0 && relativeX < canvas.width) {
-        xB = relativeX - lineWidth/2;
-        xT = relativeX - lineWidth/2;
-        if (xB + lineWidth > canvas.width){
-            xB = canvas.width - lineWidth;
-            xT = canvas.width - lineWidth;
+        xB = relativeX - game.lineWidth/2;
+        xT = relativeX - game.lineWidth/2;
+        if (xB + game.lineWidth > canvas.width){
+            xB = canvas.width - game.lineWidth;
+            xT = canvas.width - game.lineWidth;
         }
         if (xB < 0){
             xB = 0;
@@ -89,55 +76,24 @@ function mouseMoveHandler(e) {
     }
 
     if(relativeY > 0 && relativeY < canvas.height) {
-        yL = relativeY - lineHeight/2;
-        yR = relativeY - lineHeight/2;
+        yL = relativeY - game.lineHeight/2;
+        yR = relativeY - game.lineHeight/2;
         if (yL < 0){
             yL = 0;
             yR = 0;
         }
-        if (yL + lineWidth > canvas.height){
-            yL = canvas.height - lineWidth;
-            yR = canvas.height - lineWidth;
+        if (yL + game.lineWidth > canvas.height){
+            yL = canvas.height - game.lineWidth;
+            yR = canvas.height - game.lineWidth;
         }
     }
 }
 
-function keyDownHandler(e) {
-    if(e.key == "Right" || e.key == "ArrowRight") {
-        rightPressed = true;
-    }
-    else if(e.key == "Left" || e.key == "ArrowLeft") {
-        leftPressed = true;
-    }
-    else if(e.key == "Up" || e.key == "ArrowUp") {
-        upPressed = true;
-    }
-    else if(e.key == "Down" || e.key == "ArrowDown") {
-        downPressed = true;
-    }
-}
 
-function keyUpHandler(e) {
-    if(e.key == "Right" || e.key == "ArrowRight") {
-        rightPressed = false;
-    }
-    else if(e.key == "Left" || e.key == "ArrowLeft") {
-        leftPressed = false;
-    }
-        else if(e.key == "Up" || e.key == "ArrowUp") {
-        upPressed = false;
-    }
-    else if(e.key == "Down" || e.key == "ArrowDown") {
-        downPressed = false;
-    }
-}
-
-
-
-
+//prebaci u odgovarajuce klase
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+    ctx.arc(ball1.x, ball1.y, ball1.radius, 0, Math.PI*2);
     ctx.fillStyle = "#BB7777";
     ctx.fill();
     ctx.closePath();
@@ -145,7 +101,7 @@ function drawBall() {
 
 function drawBall2() {
     ctx.beginPath();
-    ctx.arc(x2, y2, ballRadius, 0, Math.PI*2);
+    ctx.arc(ball2.x, ball2.y, ball2.radius, 0, Math.PI*2);
     ctx.fillStyle = "#BB7777";
     ctx.fill();
     ctx.closePath();
@@ -153,7 +109,7 @@ function drawBall2() {
 
 function drawBall3() {
     ctx.beginPath();
-    ctx.arc(x3, y3, ballRadius, 0, Math.PI*2);
+    ctx.arc(ball3.x, ball3.y, ball3.radius, 0, Math.PI*2);
     ctx.fillStyle = "#BB7777";
     ctx.fill();
     ctx.closePath();
@@ -161,7 +117,7 @@ function drawBall3() {
 
 function drawLineBottom() {
     ctx.beginPath();
-    ctx.rect(xB, yB, lineWidth, lineHeight);
+    ctx.rect(xB, yB, game.lineWidth, game.lineHeight);
     ctx.fillStyle = "#00818a";
     ctx.fill();
     ctx.closePath();
@@ -169,7 +125,7 @@ function drawLineBottom() {
 
 function drawLineTop() {
     ctx.beginPath();
-    ctx.rect(xT, yT, lineWidth, lineHeight);
+    ctx.rect(xT, yT, game.lineWidth, game.lineHeight);
     ctx.fillStyle = "#00818a";
     ctx.fill();
     ctx.closePath();
@@ -177,7 +133,7 @@ function drawLineTop() {
 
 function drawLineLeft() {
     ctx.beginPath();
-    ctx.rect(xL, yL, lineHeight, lineWidth);
+    ctx.rect(xL, yL, game.lineHeight, game.lineWidth);
     ctx.fillStyle = "#00818a";
     ctx.fill();
     ctx.closePath();
@@ -185,72 +141,47 @@ function drawLineLeft() {
 
 function drawLineRight() {
     ctx.beginPath();
-    ctx.rect(xR, yR, lineHeight, lineWidth);
+    ctx.rect(xR, yR, game.lineHeight, game.lineWidth);
     ctx.fillStyle = "#00818a";
     ctx.fill();
     ctx.closePath();
 }
 
 
-/*
-function drawVerticalPath() {
-	ctx2.beginPath();
-    ctx2.clearRect(xT,yT, lineWidth, canvas.height);
-    ctx2.fillStyle = "#737373";
-    ctx2.fill();
-    ctx2.closePath();
+
+
+currentMs = 0;
+
+//prebaci u game klasu
+function getScore(){
+    currentMs= getCurrentTime() - start;
+    console.log("getScore: " + currentMs);
+    document.getElementById('sc').innerHTML = "" + currentMs ;
+
 }
 
-function drawHorizontalPath() {
-	ctx2.beginPath();
-    ctx2.clearRect(xL,yL,canvas.width,lineHeight);
-    ctx2.fillStyle = "#737373";
-    ctx2.fill();
-    ctx2.closePath();	
-}
-*/
-
-
+//prebaci u game klasu
 function endGame(){
-	alert("GAME OVER");
-	document.location.reload();
-	clearInterval(interval);
+    console.log("endGame");
+    getScore();
+	document.getElementById('gameover').innerHTML = "GAME OVER";
+    clearInterval(interval);
+    document.body.innerHTML += '<input id="getname" type="text" placeholder="Input your name here "></input><br>';
+    document.body.innerHTML += '<button id="submit" class="slova" onclick="awaitSendData()">Submit</button>';
 }
 
-function movement(){
-    if(rightPressed) {
-        {xB += move; xT += move;}
-        if (xB + lineWidth > canvas.width){
-            xB = canvas.width - lineWidth;
-            xT = canvas.width - lineWidth;
-        }
-    }
-    else if(leftPressed) {
-        {xB -= move; xT -= move;}
-        if (xB < 0){
-            xB = 0;
-            xT = 0;
-        }
-    }
-    else if(upPressed) {
-        {yL -= move; yR -= move;}
-        if (yL < 0){
-            yL = 0;
-            yR = 0;
-        }
-    }
-    else if(downPressed) {
-        {yL += move; yR += move;}
-        if (yL + lineWidth > canvas.height){
-            yL = canvas.height - lineWidth;
-            yR = canvas.height - lineWidth;
-        }
-    }
+async function awaitSendData(){
+    await sendData();
 }
 
 
+//prebaci u game klasu
+function restartGame(){
+    console.log("restartGame");
+    document.location.reload();	
+}
 
-
+//prebaci u Game klasu
 var start = new Date().getTime();
 
 function getCurrentTime(){
@@ -258,6 +189,7 @@ function getCurrentTime(){
 }
 
 
+//za funkciju ispod
 function positiveOrNegativeOne(){
 	var sample = Math.random();
 	if(sample < 0.5){
@@ -269,13 +201,127 @@ function positiveOrNegativeOne(){
 
 }
 
-
+//FIXME
 function randomAngle(){
 	var temp = Math.random();
-	while(temp <= 0.5){
+	while(temp <= 0.6){
 		temp = Math.random();
 	}
-	return temp* positiveOrNegativeOne();
+	return temp ;
+}
+
+
+//napredovanje lotpe na canvasu
+function updateBallMovement(){
+
+	ball1.x += ball1.dx;
+    ball1.y += ball1.dy;
+
+    if(getCurrentTime() - start > game.ball2StartTime){
+		ball2.x += ball2.dx;
+		ball2.y += ball2.dy;
+    }
+
+    if(getCurrentTime() - start > game.ball3StartTime){
+    	ball3.x += ball3.dx;
+    	ball3.y += ball3.dy;
+    }
+}
+
+
+function ballCoallision(ball){
+    if(ball.y + ball.dy > canvas.height - ball.radius){
+        if(ball.x >= xB && ball.x <= xB + game.lineWidth){
+            ball.dy = -ball.dy*randomAngle();
+            ball.dx = ball.dx * positiveOrNegativeOne();
+        }
+            else {
+                endGame();
+            }
+    }
+
+    if(ball.y + ball.dy < 0 + ball.radius){
+        if(ball.x >= xT && ball.x <= xT + game.lineWidth){
+            ball.dy = -ball.dy*randomAngle();
+            ball.dx = ball.dx * positiveOrNegativeOne();    
+        }
+            else {
+                endGame();
+            }
+    }
+
+    if(ball.x + ball.dx > canvas.width - ball.radius){
+        if(ball.y >= yR && ball.y <= yR + game.lineWidth){
+            ball.dx = -ball.dx*randomAngle();
+            ball.dy = ball.dx * positiveOrNegativeOne();    
+        }
+                else {
+                endGame();
+            }
+    }
+
+    if(ball.x + ball.dx < 0 + ball.radius){
+        if(ball.y >= yL && ball.y <= yL + game.lineWidth){
+            ball.dx = -ball.dx*randomAngle();
+            ball.dy = ball.dx * positiveOrNegativeOne();
+        }
+            else {
+                endGame();
+            }
+    }
+    
+}
+
+//slanje serveru //FIX JSON
+async function sendData(){
+    try{
+
+        fetchNameAndScore();
+
+        //const data = {name, score};
+        const URL = 'http://localhost:2020/';
+        const response = await fetch(URL, {
+            method : 'POST',
+            headers : {
+                'Content-Type': 'application/json'
+            },
+            mode : 'cors',
+            body : JSON.stringify({name : name, score : score})
+        });
+        const jsonResponse = await response.json();
+        console.log(jsonResponse);
+
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function getData(){
+    try {
+        const URL = 'http://localhost:2020/';
+        const response = await fetch(URL, {
+            method : 'GET',
+            headers : {
+                'Content-Type': 'application/json'
+            }
+        });
+        const jsonResponse = await response.json();
+        console.log(jsonResponse);   
+             
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
+//dohvatanje imena preko doma
+function fetchNameAndScore(){
+
+    name = document.getElementById('getname').value;
+    score = parseInt(document.getElementById('sc').innerHTML);
+
+    console.log("Name: "+ name);
+    console.log("Score: "+ score);
 }
 
 
@@ -287,169 +333,21 @@ function draw() {
     drawLineTop();    
     drawLineLeft();
     drawLineRight();
-   
     drawBall();
 
-    if(getCurrentTime() - start > ball2StartTime){
+    if(getCurrentTime() - start > game.ball2StartTime){
     	drawBall2();
     }
 
-    if(getCurrentTime() - start > ball3StartTime){
+    if(getCurrentTime() - start > game.ball3StartTime){
    		drawBall3();
     }
 
+    ballCoallision(ball1);
+    ballCoallision(ball2);
+    ballCoallision(ball3);
 
-    //koalizija
-
-	if(y + dy > canvas.height - ballRadius){
-		if(x >= xB && x <= xB + lineWidth){
-			dy = -dy*randomAngle();
-
-		}
-    	else{
-			endGame();
-    	}
-	}
-
-	if(y + dy < 0 + ballRadius){
-		if(x >= xT && x <= xT + lineWidth){
-			dy = -dy*randomAngle();
-
-		}
-        else{
-			endGame();
-        }
-	}
-
-	if(x + dx > canvas.width - ballRadius){
-		if(y >= yR && y <= yR + lineWidth){
-			dx = -dx*randomAngle();
-
-		}
-        else {
-			endGame();
-        }
-	}
-
-	if(x + dx < 0 + ballRadius){
-		if(y >= yL && y <= yL + lineWidth){
-			dx = -dx*randomAngle();
-		}
-        else {
-			endGame();
-        }
-	}
-
-
-
-
-
-
-
-	if(y2 + dy2 > canvas.height - ballRadius){
-		if(x2 >= xB && x2 <= xB + lineWidth){
-			dy2 = -dy2*randomAngle();
-
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-	if(y2 + dy2 < 0 + ballRadius){
-		if(x2 >= xT && x2 <= xT + lineWidth){
-			dy2 = -dy2*randomAngle();
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-	if(x2 + dx2 > canvas.width - ballRadius){
-		if(y2 >= yR && y2 <= yR + lineWidth){
-			dx2 = -dx2*randomAngle();
-		}
-		        else {
-				endGame();
-	        }
-	}
-
-	if(x2 + dx2 < 0 + ballRadius){
-		if(y2 >= yL && y2 <= yL + lineWidth){
-			dx2 = -dx2*randomAngle();
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-
-
-
-
-	if(y3 + dy3 > canvas.height - ballRadius){
-		if(x3 >= xB && x3 <= xB + lineWidth){
-			dy3 = -dy3*randomAngle();
-
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-	if(y3 + dy3 < 0 + ballRadius){
-		if(x3 >= xT && x3 <= xT + lineWidth){
-			dy3 = -dy3*randomAngle();
-
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-	if(x3 + dx3 > canvas.width - ballRadius){
-		if(y3 >= yR && y3 <= yR + lineWidth){
-			dx3 = -dx3*randomAngle();
-
-		}
-		        else {
-				endGame();
-	        }
-	}
-
-	if(x3 + dx3 < 0 + ballRadius){
-		if(y3 >= yL && y3 <= yL + lineWidth){
-			dx3 = -dx3*randomAngle();
-
-		}
-	        else {
-				endGame();
-	        }
-	}
-
-
-	//ako koristimo arrow keys
-    movement();
-
-
-    //kretanje lopte
-
-    x += dx;
-    y += dy;
-
-    if(getCurrentTime() - start > ball2StartTime){
-		x2 += dx2;
-		y2 += dy2;
-    }
-
-    if(getCurrentTime() - start > ball3StartTime){
-    	x3 += dx3;
-    	y3 += dy3;
-    }
-
-
-
-
+    updateBallMovement();
 
 }
 

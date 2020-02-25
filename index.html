@@ -16,11 +16,19 @@
 
     	<canvas id="mainCanvas" width="720" height="720" ></canvas>
 
+
     	<script src="pjj.js"></script>
 
 
-		<br>
-		<button></button>
+		<br id="score">
+		<div>
+			<p class="slova">Current score:</p><br>
+			<span class="slova" id="sc"></span>
+		</div>
 
+		<div id="over">
+			<span class="slova" id="gameover"></span><br>
+			<button class="slova" onclick="restartGame()">Restart Game</button><br>
+		</div>
   </body>
 </html>
