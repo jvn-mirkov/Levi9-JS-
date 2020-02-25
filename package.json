@@ -1,0 +1,27 @@
+{
+  "name": "pjj",
+  "version": "1.0.0",
+  "description": "Project for JavaScript course held by Levi9 at Faculty of Mathematics, University of Belgrade.",
+  "main": "pjj.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./back/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jvn-mirkov/Levi9-JS-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jvn-mirkov/Levi9-JS-/issues"
+  },
+  "homepage": "https://github.com/jvn-mirkov/Levi9-JS-#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "docker": "^1.0.0",
+    "docker-compose": "^0.23.1",
+    "express": "^4.17.1",
+    "mongodb": "^3.4.1"
+  }
+}
