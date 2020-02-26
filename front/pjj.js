@@ -166,7 +166,7 @@ function endGame(){
     getScore();
 	document.getElementById('gameover').innerHTML = "GAME OVER";
     clearInterval(interval);
-    document.body.innerHTML += '<input id="getname" type="text" placeholder="Input your name here "></input><br>';
+    document.body.innerHTML += '<input id="getname" type="text" placeholder="Input your name here " width="100" height="100"></input><br>';
     document.body.innerHTML += '<button id="submit" class="slova" onclick="awaitSendData()">Submit</button>';
 }
 
@@ -285,7 +285,7 @@ async function sendData(){
             headers : {
                 'Content-Type': 'application/json'
             },
-            mode : 'cors',
+            //mode : 'cors',
             body : JSON.stringify({name : name, score : score})
         });
         const jsonResponse = await response.json();
