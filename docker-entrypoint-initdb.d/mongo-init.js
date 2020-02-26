@@ -2,12 +2,12 @@ let test = [
     {
       "name": "jvn",
       "score": 1234,
-
+      "date": "Tue Feb 25 2020 23:40:51 GMT+0000 (Coordinated Universal Time)"
     },
     {
       "name": "Ivn",
       "score": 4321,
-
+      "date": "Tue Feb 25 2020 23:41:33 GMT+0000 (Coordinated Universal Time)"
     }
   ];
 
